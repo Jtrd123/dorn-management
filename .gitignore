@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# Claude Code (local AI session files — not for teammates)
+.claude/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
