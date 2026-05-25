@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
-  Building2, BarChart3, Wrench, Users, FileText,
+  Building2, BarChart3, Wrench, Users, FileText, Settings,
   Menu, LogOut, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -16,6 +16,7 @@ const NAV = [
   { href: '/reports',     icon: BarChart3, label: 'รายงาน',   sub: 'สรุปรายรับ' },
   { href: '/maintenance', icon: Wrench,    label: 'แจ้งซ่อม',  sub: 'คำขอซ่อมบำรุง' },
   { href: '/tenants',     icon: Users,     label: 'ผู้เช่า',   sub: 'ข้อมูลสัญญา' },
+  { href: '/settings',    icon: Settings,  label: 'ตั้งค่า',   sub: 'ระบบและอัตราค่า' },
 ]
 
 // ── Nav item (full) ──────────────────────────────────────────

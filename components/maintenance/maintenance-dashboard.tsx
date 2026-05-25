@@ -4,8 +4,10 @@ import { useState, useMemo } from 'react'
 import {
   Wrench, CheckCircle2, Clock, AlertTriangle,
   ChevronDown, User, Phone, Filter,
+  QrCode, Copy, Check, ExternalLink,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {
   getMockMaintenanceItems,
   getMaintenanceStats,
@@ -193,6 +195,71 @@ function MaintenanceCard({
   )
 }
 
+// ── QR Link Dialog ────────────────────────────────────────────
+function QrDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [copied, setCopied] = useState(false)
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+  const submitUrl = `${baseUrl}/submit`
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(submitUrl)}`
+
+  function handleCopy() {
+    navigator.clipboard.writeText(submitUrl)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="text-base font-bold" style={{ color: '#2e006b' }}>
+            QR แจ้งซ่อมสำหรับผู้เช่า
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <p className="text-xs text-gray-500">
+            ผู้เช่า scan QR หรือเปิดลิงก์ แล้วกรอกหมายเลขห้องได้เลย — ไม่ต้อง login
+          </p>
+
+          {/* QR Code */}
+          <div className="flex justify-center">
+            <div className="p-4 rounded-2xl border-2 border-purple-100 bg-white inline-block">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qrUrl} alt="QR Code" width={180} height={180} className="rounded-lg" />
+            </div>
+          </div>
+
+          {/* URL + actions */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 px-3 py-2 rounded-xl border border-gray-200 bg-gray-50 text-xs text-gray-600 truncate">
+              {submitUrl}
+            </div>
+            <button
+              onClick={handleCopy}
+              title="คัดลอก"
+              className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-gray-500" />}
+            </button>
+            <a
+              href={submitUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="เปิดในแท็บใหม่"
+              className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              <ExternalLink className="w-4 h-4 text-gray-500" />
+            </a>
+          </div>
+          <p className="text-[11px] text-gray-400 text-center">
+            ติด QR ไว้หน้าห้องพัก หรือส่งลิงก์ให้ผู้เช่าผ่าน Line / SMS
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 // ── Main Dashboard ────────────────────────────────────────────
 type FloorFilter = 'all' | 1 | 2 | 3
 type StatusFilter = 'all' | 'PENDING' | 'RESOLVED'
@@ -200,6 +267,7 @@ type StatusFilter = 'all' | 'PENDING' | 'RESOLVED'
 export function MaintenanceDashboard() {
   const stats = useMemo(() => getMaintenanceStats(), [])
   const [items, setItems] = useState<MaintenanceItem[]>(() => getMockMaintenanceItems())
+  const [qrOpen, setQrOpen] = useState(false)
 
   const [floorFilter, setFloorFilter] = useState<FloorFilter>('all')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('PENDING')
@@ -233,12 +301,24 @@ export function MaintenanceDashboard() {
     <div className="px-4 sm:px-6 py-6 space-y-5 max-w-4xl mx-auto">
 
       {/* Header */}
-      <div>
-        <h2 className="font-bold text-lg" style={{ color: '#2e006b' }}>คำขอแจ้งซ่อม</h2>
-        <p className="text-xs text-gray-500 mt-0.5">
-          ข้อมูลจากระบบ Mock — เชื่อมต่อ Supabase แล้วจะดึงข้อมูลจริง
-        </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="font-bold text-lg" style={{ color: '#2e006b' }}>คำขอแจ้งซ่อม</h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            ข้อมูลจากระบบ Mock — เชื่อมต่อ Supabase แล้วจะดึงข้อมูลจริง
+          </p>
+        </div>
+        <Button
+          onClick={() => setQrOpen(true)}
+          variant="outline"
+          className="h-9 gap-2 text-sm font-medium border-purple-200 text-purple-700 hover:bg-purple-50 shrink-0"
+        >
+          <QrCode className="w-4 h-4" />
+          ลิงก์แจ้งซ่อม
+        </Button>
       </div>
+
+      <QrDialog open={qrOpen} onClose={() => setQrOpen(false)} />
 
       {/* Stat cards */}
       <div className="grid grid-cols-3 gap-3">
