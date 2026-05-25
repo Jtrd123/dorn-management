@@ -29,9 +29,7 @@ function RoomCard({ room, onClick }: { room: Room; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group relative w-full aspect-square rounded-xl border-2 flex flex-col items-center
-        justify-center gap-0.5 transition-all duration-150 hover:scale-105 hover:shadow-md
-        active:scale-100 cursor-pointer"
+      className="group relative w-full aspect-square rounded-xl border-2 flex flex-col items-center justify-center gap-0.5 transition-all duration-150 hover:scale-105 hover:shadow-md active:scale-100 cursor-pointer"
       style={{ background: cfg.bg, borderColor: cfg.border }}
     >
       <span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ background: cfg.dot }} />

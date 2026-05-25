@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
-  Building2, BarChart3, Wrench, Users,
+  Building2, BarChart3, Wrench, Users, FileText,
   Menu, LogOut, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
@@ -12,6 +12,7 @@ import { getMockSession, clearMockSession, type MockSession } from '@/lib/mock-a
 
 const NAV = [
   { href: '/dashboard',   icon: Building2, label: 'ภาพรวม',   sub: 'ผังห้องพัก' },
+  { href: '/bills',       icon: FileText,  label: 'บิล',       sub: 'จัดการบิล' },
   { href: '/reports',     icon: BarChart3, label: 'รายงาน',   sub: 'สรุปรายรับ' },
   { href: '/maintenance', icon: Wrench,    label: 'แจ้งซ่อม',  sub: 'คำขอซ่อมบำรุง' },
   { href: '/tenants',     icon: Users,     label: 'ผู้เช่า',   sub: 'ข้อมูลสัญญา' },
@@ -60,8 +61,7 @@ function NavItemCollapsed({ href, icon: Icon, label, active, onClick }: {
           style={{ background: '#ffd445' }} />
       )}
       {/* Tooltip */}
-      <span className="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg text-xs font-semibold
-        whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
+      <span className="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-lg"
         style={{ background: '#1a003d', color: 'white' }}>
         {label}
       </span>
@@ -164,8 +164,7 @@ function SidebarInner({ onNavigate, collapsed = false, onToggle }: SidebarInnerP
           <button
             onClick={onToggle}
             title={collapsed ? 'ขยาย Sidebar' : 'หุบ Sidebar'}
-            className="flex items-center justify-center w-7 h-7 rounded-lg text-white/50
-              hover:text-white hover:bg-white/10 transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors"
           >
             {collapsed
               ? <ChevronRight className="w-4 h-4" />
