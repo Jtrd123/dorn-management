@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Printer, Building2, Scissors } from 'lucide-react'
+import { ArrowLeft, Printer, Building2 } from 'lucide-react'
 import { getRoomBillingData, formatThaiMonth } from '@/lib/mock-billing-data'
 import { getMockBillByRoom } from '@/lib/mock-bills-data'
 import { bahtText } from '@/lib/thai-baht'
@@ -92,9 +92,7 @@ function buildReceiptData(roomNumber: string): ReceiptData {
 
 // ── Single copy ───────────────────────────────────────────────
 function ReceiptCopy({
-  data,
-  copyLabel,
-  copyColor,
+  data
 }: {
   data: ReceiptData
   copyLabel: string
